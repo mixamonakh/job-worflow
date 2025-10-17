@@ -1,0 +1,124 @@
+import { defineConfig } from 'vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import { resolve } from 'path';
+import { glob } from 'glob';
+import UnoCSS from 'unocss/vite'
+
+// Функция для автоматического поиска всех HTML файлов
+function getHtmlEntries() {
+  const htmlFiles = glob.sync('*.html');
+  const entries = {};
+  
+  htmlFiles.forEach(file => {
+    const name = file.replace('.html', '');
+    entries[name] = resolve(__dirname, file);
+  });
+  
+  return entries;
+}
+
+export default defineConfig(({ mode }) => {
+  // Настройка путей для разных окружений
+  const baseConfig = {
+    development: './',  // dev режим — относительные пути
+    test: '/folder-project/',  // тест — /folder-project/
+    production: '/'  // прод — от корня
+  };
+
+  return {
+    base: baseConfig[mode] || './',
+    
+    // Папка с исходниками
+    root: './',
+    
+    // Папка для собранных файлов
+    build: {
+      outDir: `dist/${mode}`,
+      emptyOutDir: true,
+      
+      rollupOptions: {
+        input: getHtmlEntries(),
+        
+        output: {
+          // Структура файлов после сборки
+          assetFileNames: (assetInfo) => {
+            // Картинки в папку images/
+            if (/\.(png|jpe?g|gif|svg|webp|avif)$/i.test(assetInfo.name)) {
+              return 'images/[name][extname]';
+            }
+            // CSS в папку css/
+            if (/\.css$/i.test(assetInfo.name)) {
+              return 'css/[name][extname]';
+            }
+            return 'assets/[name][extname]';
+          },
+          
+          chunkFileNames: 'js/[name].js',
+          entryFileNames: 'js/[name].js',
+        }
+      },
+      
+      // Tree-shaking и минификация
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: mode === 'production'  // удаляем console.log в проде
+        }
+      }
+    },
+    
+    // Настройки dev-сервера
+    server: {
+      port: 3000,
+      open: true
+    },
+    
+    // Плагины
+    plugins: [
+      UnoCSS(),
+      ViteImageOptimizer({
+        // Оптимизация PNG
+        png: {
+          quality: 85
+        },
+        // Оптимизация JPEG
+        jpeg: {
+          quality: 85
+        },
+        // Оптимизация WebP
+        webp: {
+          quality: 85
+        },
+        // SVG оптимизация
+        svg: {
+          multipass: true,
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  removeViewBox: false,
+                  cleanupIds: false
+                }
+              }
+            }
+          ]
+        }
+      })
+    ],
+    
+    // Настройка алиасов для импортов
+    resolve: {
+      alias: {
+      }
+    },
+    
+    // CSS настройки
+    css: {
+      preprocessorOptions: {
+        scss: {
+        }
+      }
+    }
+  };
+});

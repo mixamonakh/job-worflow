@@ -1,0 +1,118 @@
+/* ================================================
+   utilities/_spacing.scss
+   Генерация margin/padding утилит
+   ================================================ */
+
+@use "../fluid-layout" as fl;
+@use "../mq" as mq;
+
+/* Генерация положительных отступов */
+@each $size in fl.$size-scale {
+  /* Margin утилиты */
+  .m-#{$size} { margin: var(--#{$size}) !important; }
+  .mt-#{$size} { margin-top: var(--#{$size}) !important; }
+  .mb-#{$size} { margin-bottom: var(--#{$size}) !important; }
+  .ml-#{$size} { margin-left: var(--#{$size}) !important; }
+  .mr-#{$size} { margin-right: var(--#{$size}) !important; }
+  .mx-#{$size} { 
+    margin-left: var(--#{$size}) !important; 
+    margin-right: var(--#{$size}) !important; 
+  }
+  .my-#{$size} { 
+    margin-top: var(--#{$size}) !important; 
+    margin-bottom: var(--#{$size}) !important; 
+  }
+  
+  /* Padding утилиты */
+  .p-#{$size} { padding: var(--#{$size}) !important; }
+  .pt-#{$size} { padding-top: var(--#{$size}) !important; }
+  .pb-#{$size} { padding-bottom: var(--#{$size}) !important; }
+  .pl-#{$size} { padding-left: var(--#{$size}) !important; }
+  .pr-#{$size} { padding-right: var(--#{$size}) !important; }
+  .px-#{$size} { 
+    padding-left: var(--#{$size}) !important; 
+    padding-right: var(--#{$size}) !important; 
+  }
+  .py-#{$size} { 
+    padding-top: var(--#{$size}) !important; 
+    padding-bottom: var(--#{$size}) !important; 
+  }
+}
+
+/* Генерация отрицательных отступов */
+@each $size in fl.$size-negatives {
+  .mt--#{$size} { margin-top: var(---#{$size}) !important; }
+  .mb--#{$size} { margin-bottom: var(---#{$size}) !important; }
+  .ml--#{$size} { margin-left: var(---#{$size}) !important; }
+  .mr--#{$size} { margin-right: var(---#{$size}) !important; }
+  .mx--#{$size} { 
+    margin-left: var(---#{$size}) !important; 
+    margin-right: var(---#{$size}) !important; 
+  }
+  .my--#{$size} { 
+    margin-top: var(---#{$size}) !important; 
+    margin-bottom: var(---#{$size}) !important; 
+  }
+}
+
+/* Особые утилиты */
+.m-0 { margin: 0 !important; }
+.p-0 { padding: 0 !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+/* Responsive варианты для планшетов */
+@include mq.d('laptop') {
+  @each $size in fl.$size-scale {
+    .laptop\:m-#{$size} { margin: var(--#{$size}) !important; }
+    .laptop\:mt-#{$size} { margin-top: var(--#{$size}) !important; }
+    .laptop\:mb-#{$size} { margin-bottom: var(--#{$size}) !important; }
+    .laptop\:mx-#{$size} { 
+      margin-left: var(--#{$size}) !important; 
+      margin-right: var(--#{$size}) !important; 
+    }
+    .laptop\:my-#{$size} { 
+      margin-top: var(--#{$size}) !important; 
+      margin-bottom: var(--#{$size}) !important; 
+    }
+    
+    .laptop\:p-#{$size} { padding: var(--#{$size}) !important; }
+    .laptop\:px-#{$size} { 
+      padding-left: var(--#{$size}) !important; 
+      padding-right: var(--#{$size}) !important; 
+    }
+    .laptop\:py-#{$size} { 
+      padding-top: var(--#{$size}) !important; 
+      padding-bottom: var(--#{$size}) !important; 
+    }
+  }
+}
+
+/* Responsive варианты для мобайлов */
+@include mq.d('mobile') {
+  @each $size in fl.$size-scale {
+    .mobile\:m-#{$size} { margin: var(--#{$size}) !important; }
+    .mobile\:mt-#{$size} { margin-top: var(--#{$size}) !important; }
+    .mobile\:mb-#{$size} { margin-bottom: var(--#{$size}) !important; }
+    .mobile\:mx-#{$size} { 
+      margin-left: var(--#{$size}) !important; 
+      margin-right: var(--#{$size}) !important; 
+    }
+    .mobile\:my-#{$size} { 
+      margin-top: var(--#{$size}) !important; 
+      margin-bottom: var(--#{$size}) !important; 
+    }
+    
+    .mobile\:p-#{$size} { padding: var(--#{$size}) !important; }
+    .mobile\:px-#{$size} { 
+      padding-left: var(--#{$size}) !important; 
+      padding-right: var(--#{$size}) !important; 
+    }
+    .mobile\:py-#{$size} { 
+      padding-top: var(--#{$size}) !important; 
+      padding-bottom: var(--#{$size}) !important; 
+    }
+  }
+  
+  .mobile\:m-0 { margin: 0 !important; }
+  .mobile\:p-0 { padding: 0 !important; }
+}

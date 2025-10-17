@@ -1,0 +1,68 @@
+/* ================================================
+   scss/_fluid-layout.scss
+   Модуль резиновости: var(--N) и var(---N)
+   ================================================ */
+
+@use "sass:math";
+
+/* UPDATED: набор положительных размеров */
+$size-scale: (1,2,3,4,5,6,8,10,12,14,16,20,24,30,40,60,80,120) !default;
+
+/* ADDED: whitelист отрицательных значений */
+$size-negatives: () !default;
+
+/* Конфиг брейкпоинтов */
+$fluid-breakpoints: (
+  "desktop-max": (query: "(min-width: 1920.02px)", width: 1920),
+  "laptop":      (query: "(max-width: 1440.98px)", width: 1440),
+  "mobile":      (query: "(max-width: 767.98px)",  width: 375)
+) !default;
+
+/* Утилиты */
+@function px-to-vw($px, $ref) { // UPDATED: только vw-логика
+  @return math.div($px, $ref) * 100vw;
+}
+
+/* Печать одной custom property */
+@mixin _print-var($name, $value) {
+  --#{$name}: #{$value};
+}
+
+/* Генерация :root */
+@mixin generate-fluid-vars() {
+  :root {
+    /* Положительные: PX по умолчанию */
+    @each $n in $size-scale {
+      @include _print-var(#{$n}, #{$n}px);
+    }
+    /* Отрицательные: PX по умолчанию */
+    @each $n in $size-negatives {
+      @include _print-var(-#{$n}, -#{$n}px); // UPDATED: '--' + '-N' => '---N'
+    }
+  }
+
+  /* Переопределения vw на брейкпоинтах */
+  @each $bp-name, $bp in $fluid-breakpoints {
+    $query: map-get($bp, query);
+    $ref:   map-get($bp, width);
+
+    @media #{$query} {
+      :root {
+        /* Положительные: VW */
+        @each $n in $size-scale {
+          @include _print-var(#{$n}, px-to-vw($n, $ref));
+        }
+        /* Отрицательные: VW */
+        @each $n in $size-negatives {
+          @include _print-var(-#{$n}, -1 * px-to-vw($n, $ref)); // UPDATED
+        }
+      }
+    }
+  }
+}
+
+/* Точечный миксин — только vw */
+@mixin fluid($prop, $px, $ref: null) {
+  $ref-width: if($ref == null, map-get(map-get($fluid-breakpoints, "desktop-max"), width), $ref);
+  #{$prop}: px-to-vw($px, $ref-width);
+}
