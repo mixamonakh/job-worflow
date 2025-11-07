@@ -116,7 +116,7 @@ export default defineConfig(({ mode }) => {
     // CSS настройки
     css: {
       preprocessorOptions: {
-        scss: {
+        sass: {
         }
       }
     }
