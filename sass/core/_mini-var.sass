@@ -1,0 +1,6 @@
+@use "sass:math"
+
+@function v($n)
+  @if $n < 0
+    @return var(---#{math.abs($n)})
+  @return var(--#{$n})

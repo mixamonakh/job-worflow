@@ -1,0 +1,21 @@
+// === CORE (системные файлы) ===
+@use './core/reset'
+@use './core/grid'
+@use './core/fonts'
+@use './core' as *    // ← Прокидываем переменные и v() глобально
+
+// === UTILITS ===
+@use './utilits/_visible-grid-columns'
+
+
+// === BASE ===
+@use './base/typography'
+@use './base/global'
+
+// === COMPONENTS ===
+@use './components/header'
+@use './components/footer'
+
+
+// Димины стили
+@import './dima.css'

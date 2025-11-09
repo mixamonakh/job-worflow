@@ -1,0 +1,52 @@
+@use '../core' as *
+
+// ============================================== GRID ==============================================
+
+a.grid-trigger
+    display: block
+    position: absolute
+    z-index: 9999
+    right: 0
+    top: 100%
+    transform-origin: right top
+    padding: v(8) v(16)
+    color: var(--blue)
+    transform: rotate(90deg)
+    background: var(--green)
+    text-transform: uppercase
+    border-radius: 0 0 0 v(16)
+    transition: all 0.3s
+
+.grid
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: var(--app-height)
+    opacity: 0
+    z-index: 9999
+    pointer-events: none
+    transition: opacity 0.5s
+
+.show-grid
+    .grid
+        opacity: 0.1
+
+.grid-item
+    height: 100%
+    width: 100%
+    background: red
+
+// Медиа-запрос для планшетов
+@media (max-width: 1440.98px)
+    .grid
+        .row
+            > *
+                &:nth-child(n+8)
+                    display: none
+                
+                flex: 0 0 auto
+                width: auto
+    
+    .grid-item
+        width: v(1)

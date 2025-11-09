@@ -1,0 +1,54 @@
+@use '../core' as *
+
+// === КОНТЕЙНЕР ===
+.content-container
+    max-width: $container-width
+    margin-left: auto
+    margin-right: auto
+    padding-left: $container-padding
+    padding-right: $container-padding
+
+    // Адаптация
+    @media (max-width: 1440.98px)
+        padding-left: $container-padding-laptop
+        padding-right: $container-padding-laptop
+
+    @media (max-width: 767.98px)
+        padding-left: $container-padding-mobile
+        padding-right: $container-padding-mobile
+
+// === ROW ===
+.row
+    display: flex
+    flex-wrap: wrap
+    margin-left: calc(#{$gutter} * -1)
+    margin-right: calc(#{$gutter} * -1)
+
+    // Адаптация
+    @media (max-width: 1440.98px)
+        margin-left: calc(#{$gutter-laptop} * -1)
+        margin-right: calc(#{$gutter-laptop} * -1)
+
+    @media (max-width: 767.98px)
+        margin-left: calc(#{$gutter-mobile} * -1)
+        margin-right: calc(#{$gutter-mobile} * -1)
+
+// === КОЛОНКИ ===
+// Базовые стили для всех колонок
+
+.col
+    flex: 1 0 0%
+
+.col,
+[class*="col-"]
+    padding-left: $gutter
+    padding-right: $gutter
+
+    // Адаптация
+    @media (max-width: 1440.98px)
+        padding-left: $gutter-laptop
+        padding-right: $gutter-laptop
+
+    @media (max-width: 767.98px)
+        padding-left: $gutter-mobile
+        padding-right: $gutter-mobile

@@ -1,0 +1,70 @@
+@use '../core' as *
+
+// === БАЗОВАЯ ТИПОГРАФИКА ===
+
+body
+  font-family: 'Arial', sans-serif
+  font-weight: 400
+  font-size: v(16)
+  line-height: 1.5
+  color: var(--black)
+
+// === ЗАГОЛОВКИ ===
+
+h1, h2, h3, h4, h5, h6
+  font-family: 'Georgia', serif
+  font-weight: 700
+  line-height: 1.2
+  color: var(--black)
+  margin-bottom: v(16)
+
+h1
+  font-size: v(60)
+
+h2
+  font-size: v(48)
+
+h3
+  font-size: v(36)
+
+h4
+  font-size: v(24)
+
+h5
+  font-size: v(20)
+
+h6
+  font-size: v(18)
+
+// === ПАРАГРАФЫ ===
+
+p
+  margin-bottom: v(16)
+  
+  &:last-child
+    margin-bottom: 0
+
+// === СПИСКИ ===
+
+ul, ol
+  margin-bottom: v(16)
+  padding-left: v(40)
+  
+  &:last-child
+    margin-bottom: 0
+
+li
+  margin-bottom: v(8)
+  
+  &:last-child
+    margin-bottom: 0
+
+// === ССЫЛКИ ===
+
+a
+  color: #2563eb
+  text-decoration: none
+  transition: color 0.3s ease
+  
+  &:hover
+    color: #1d4ed8

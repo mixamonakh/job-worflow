@@ -7,7 +7,7 @@
     "dev": "vite",
     "build:dev": "vite build --mode development",
     "build:test": "vite build --mode test",
-    "build:prod": "vite build --mode prod",
+    "build:production": "vite build --mode production",
     "preview": "vite preview"
   },
   "keywords": [],
@@ -16,6 +16,7 @@
   "description": "",
   "devDependencies": {
     "sass": "^1.93.2",
+    "sharp": "^0.34.5",
     "terser": "^5.44.0",
     "unocss": "^66.5.4",
     "vite": "^7.1.9",

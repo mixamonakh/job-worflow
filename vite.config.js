@@ -3,6 +3,7 @@ import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import { resolve } from 'path';
 import { glob } from 'glob';
 import UnoCSS from 'unocss/vite'
+import { copyFileSync, mkdirSync, existsSync } from 'fs';
 
 // Функция для автоматического поиска всех HTML файлов
 function getHtmlEntries() {
@@ -58,13 +59,7 @@ export default defineConfig(({ mode }) => {
         }
       },
       
-      // Tree-shaking и минификация
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: mode === 'production'  // удаляем console.log в проде
-        }
-      }
+      minify: false,
     },
     
     // Настройки dev-сервера
@@ -75,6 +70,28 @@ export default defineConfig(({ mode }) => {
     
     // Плагины
     plugins: [
+      {
+        name: 'copy-vendor',
+        closeBundle() {
+          try {
+            const outDir = `dist/${mode}`;
+            const sourcePath = resolve(__dirname, 'js/vendor.min.js');
+            
+            // Проверь существование файла
+            if (!existsSync(sourcePath)) {
+              console.warn('⚠️  vendor.min.js не найден в js/');
+              return;
+            }
+            
+            mkdirSync(`${outDir}/js`, { recursive: true });
+            copyFileSync(sourcePath, `${outDir}/js/vendor.min.js`);
+            console.log(`✓ vendor.min.js → ${outDir}/js/`);
+          } catch (err) {
+            console.error('⚠️  Копирование vendor.min.js:', err.message);
+          }
+        }
+      },
+      
       UnoCSS(),
       ViteImageOptimizer({
         // Оптимизация PNG
