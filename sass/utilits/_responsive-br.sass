@@ -1,0 +1,34 @@
+@use '../core' as *
+
+// === АДАПТИВНЫЕ BR ===
+
+// Скрыть на laptop
+br.l-none
+    +l
+        display: none
+
+// Скрыть на mobile
+br.m-none
+    +m
+        display: none
+
+// Скрыть на laptop И mobile (показывать только на desktop)
+br.d-only
+    +l
+        display: none
+    +m
+        display: none
+
+// Показывать только на laptop
+br.l-only
+    display: none
+    +l
+        display: initial
+    +m
+        display: none
+
+// Показывать только на mobile
+br.m-only
+    display: none
+    +m
+        display: initial

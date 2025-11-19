@@ -1,0 +1,173 @@
+.
+├── dist
+│   ├── development
+│   │   ├── assets
+│   │   │   └── manifest.json
+│   │   ├── css
+│   │   │   └── index.css
+│   │   ├── i
+│   │   │   ├── 1-img-mob.png
+│   │   │   ├── 1-img.png
+│   │   │   ├── 2-l-img.png
+│   │   │   ├── 2-r-img.png
+│   │   │   ├── 3-img.png
+│   │   │   ├── android-icon-192x192.png
+│   │   │   ├── apple-icon-114x114.png
+│   │   │   ├── apple-icon-120x120.png
+│   │   │   ├── apple-icon-152x152.png
+│   │   │   ├── apple-icon-180x180.png
+│   │   │   ├── apple-icon-57x57.png
+│   │   │   ├── apple-icon-60x60.png
+│   │   │   ├── apple-icon-72x72.png
+│   │   │   ├── apple-icon-76x76.png
+│   │   │   ├── favicon-16x16.png
+│   │   │   ├── favicon-32x32.png
+│   │   │   ├── favicon-96x96.png
+│   │   │   ├── home.jpg
+│   │   │   ├── ms-icon-144x144.png
+│   │   │   └── ran-logo.png
+│   │   ├── index.html
+│   │   └── js
+│   │       ├── index.js
+│   │       └── vendor.min.js
+│   ├── production
+│   │   ├── assets
+│   │   │   └── manifest.json
+│   │   ├── css
+│   │   │   └── index.css
+│   │   ├── i
+│   │   │   ├── 1-img-mob.png
+│   │   │   ├── 1-img.png
+│   │   │   ├── 2-l-img.png
+│   │   │   ├── 2-r-img.png
+│   │   │   ├── 3-img.png
+│   │   │   ├── android-icon-192x192.png
+│   │   │   ├── apple-icon-114x114.png
+│   │   │   ├── apple-icon-120x120.png
+│   │   │   ├── apple-icon-152x152.png
+│   │   │   ├── apple-icon-180x180.png
+│   │   │   ├── apple-icon-57x57.png
+│   │   │   ├── apple-icon-60x60.png
+│   │   │   ├── apple-icon-72x72.png
+│   │   │   ├── apple-icon-76x76.png
+│   │   │   ├── favicon-16x16.png
+│   │   │   ├── favicon-32x32.png
+│   │   │   ├── favicon-96x96.png
+│   │   │   ├── home.jpg
+│   │   │   ├── ms-icon-144x144.png
+│   │   │   └── ran-logo.png
+│   │   ├── index.html
+│   │   └── js
+│   │       ├── index.js
+│   │       └── vendor.min.js
+│   └── test
+│       ├── assets
+│       │   └── manifest.json
+│       ├── css
+│       │   └── index.css
+│       ├── i
+│       │   ├── 1-img-mob.png
+│       │   ├── 1-img.png
+│       │   ├── 2-l-img.png
+│       │   ├── 2-r-img.png
+│       │   ├── 3-img.png
+│       │   ├── android-icon-192x192.png
+│       │   ├── apple-icon-114x114.png
+│       │   ├── apple-icon-120x120.png
+│       │   ├── apple-icon-152x152.png
+│       │   ├── apple-icon-180x180.png
+│       │   ├── apple-icon-57x57.png
+│       │   ├── apple-icon-60x60.png
+│       │   ├── apple-icon-72x72.png
+│       │   ├── apple-icon-76x76.png
+│       │   ├── favicon-16x16.png
+│       │   ├── favicon-32x32.png
+│       │   ├── favicon-96x96.png
+│       │   ├── home.jpg
+│       │   ├── ms-icon-144x144.png
+│       │   └── ran-logo.png
+│       ├── index.html
+│       └── js
+│           ├── index.js
+│           └── vendor.min.js
+├── doca.md
+├── fonts
+│   ├── Geologica-Bold.ttf
+│   ├── Geologica-Medium.ttf
+│   ├── Geologica-Regular.ttf
+│   └── Geologica-SemiBold.ttf
+├── i
+│   ├── 1-img-mob.png
+│   ├── 1-img.png
+│   ├── 180x180.png
+│   ├── 2-l-img.png
+│   ├── 2-r-img-mob.png
+│   ├── 2-r-img.png
+│   ├── 3-img.png
+│   ├── bulit-map.svg
+│   ├── favicon
+│   │   ├── android-icon-144x144.png
+│   │   ├── android-icon-192x192.png
+│   │   ├── android-icon-36x36.png
+│   │   ├── android-icon-48x48.png
+│   │   ├── android-icon-72x72.png
+│   │   ├── android-icon-96x96.png
+│   │   ├── apple-icon-114x114.png
+│   │   ├── apple-icon-120x120.png
+│   │   ├── apple-icon-144x144.png
+│   │   ├── apple-icon-152x152.png
+│   │   ├── apple-icon-180x180.png
+│   │   ├── apple-icon-57x57.png
+│   │   ├── apple-icon-60x60.png
+│   │   ├── apple-icon-72x72.png
+│   │   ├── apple-icon-76x76.png
+│   │   ├── apple-icon-precomposed.png
+│   │   ├── apple-icon.png
+│   │   ├── browserconfig.xml
+│   │   ├── favicon-16x16.png
+│   │   ├── favicon-32x32.png
+│   │   ├── favicon-96x96.png
+│   │   ├── favicon.ico
+│   │   ├── manifest.json
+│   │   ├── ms-icon-144x144.png
+│   │   ├── ms-icon-150x150.png
+│   │   ├── ms-icon-310x310.png
+│   │   └── ms-icon-70x70.png
+│   ├── i-map.svg
+│   ├── logo.svg
+│   ├── map.png
+│   ├── og
+│   │   └── home.jpg
+│   └── ran-logo.png
+├── index.html
+├── js
+│   ├── script.js
+│   └── vendor.min.js
+├── package-lock.json
+├── package.json
+├── sass
+│   ├── base
+│   │   ├── _global.sass
+│   │   └── _typography.sass
+│   ├── components
+│   │   ├── _footer.sass
+│   │   └── _header.sass
+│   ├── config
+│   │   └── _variables.sass
+│   ├── core
+│   │   ├── _fonts.sass
+│   │   ├── _grid.sass
+│   │   ├── _index.sass
+│   │   ├── _mini-var.sass
+│   │   ├── _mixins.sass
+│   │   └── _reset.sass
+│   ├── dima.css
+│   ├── style.sass
+│   └── utilits
+│       ├── _responsive-br.sass
+│       └── _visible-grid-columns.sass
+├── tree.txt
+├── uno.config.js
+└── vite.config.js
+
+28 directories, 143 files

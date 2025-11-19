@@ -1,21 +1,15 @@
-/* Стили тестовые. Настраиваем тут контейнер, скролл, сетку */
+ .main{position:relative;width:100%;height:100vh;height:var(--app-height);overflow:hidden;display:-webkit-box;display:-ms-flexbox;display:flex;}
 
-
-/* ---------------------------------------------- MAIN ---------------------------------------------- */
-.main{position:relative;width:100%;height:100vh;height:var(--app-height);overflow:hidden;display:-webkit-box;display:-ms-flexbox;display:flex;opacity:0;display:none;}
-.ready .main{opacity:1;display:block;}
-/* Scroll */
 .main-scroll{position:relative;width:100%;min-width:300px;height:100%;-webkit-transform-origin:top center;-ms-transform-origin:top center;transform-origin:top center;pointer-events:none;will-change:transform;}
 .scroll-container{position:absolute;top:0;left:0;width:100%;height:100%;-webkit-transform-origin:top center;-ms-transform-origin:top center;transform-origin:top center;display:-webkit-box;display:-ms-flexbox;display:flex;height:100%!important;pointer-events:auto;will-change:transform;transform:translateZ(0);}
 .scroll-content{display:-webkit-box!important;display:-ms-flexbox!important;display:flex!important;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;width:100%;will-change:transform;transform:translateZ(0);}
 .scrollbar-track{z-index:9999!important;will-change:transform;}
 .scrollbar-track-y{right:0!important;width:var(--8)!important;background:transparent!important;}
-.scrollbar-track-y:before{content:'';display:block;position:absolute;left:0;top:0;bottom:0;width:100%;height:100%;background:var(--blue15);opacity:0;transform:scaleX(.5);transform-origin:right center;transition:opacity .3s, transform .3s;}
+.scrollbar-track-y:before{content:'';display:block;position:absolute;left:0;top:0;bottom:0;width:100%;height:100%;background:var(--beuge);opacity:0;transform:scaleX(.5);transform-origin:right center;transition:opacity .3s, transform .3s;}
 .scrollbar-thumb{background:transparent!important;border-radius:0!important;width:100%!important;}
-.scrollbar-track-y .scrollbar-thumb:before{content:'';display:block;position:absolute;left:0;top:0;bottom:0;width:100%;height:100%;background:var(--green);transform:scaleX(.5);transform-origin:right center;opacity:.5;transition:opacity .3s, transform .3s;}
+.scrollbar-track-y .scrollbar-thumb:before{content:'';display:block;position:absolute;left:0;top:0;bottom:0;width:100%;height:100%;background:var(--red);transform:scaleX(.5);transform-origin:right center;opacity:1;transition:opacity .3s, transform .3s;}
 .desktop .scrollbar-track-y:hover .scrollbar-thumb:before{transform:scaleX(1);opacity:1;}
 .desktop .scrollbar-track-y:hover:before{transform:scaleX(1);opacity:1;}
 
-/* ---------------------------------------------- CONTENT ---------------------------------------------- */
-.content{position:relative;overflow:hidden;width:100%;min-height:var(--app-height)}
-
+.content{position:relative;overflow:hidden;width:100%;min-height:var(--app-height);padding-top: var(--header-height)}
+ /**/

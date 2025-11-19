@@ -2,11 +2,10 @@
 @use './core/reset'
 @use './core/grid'
 @use './core/fonts'
-@use './core' as *    // ← Прокидываем переменные и v() глобально
+@use './core' as *
 
 // === UTILITS ===
-@use './utilits/_visible-grid-columns'
-
+@use './utilits/responsive-br'
 
 // === BASE ===
 @use './base/typography'
@@ -15,7 +14,6 @@
 // === COMPONENTS ===
 @use './components/header'
 @use './components/footer'
-
 
 // Димины стили
 @import './dima.css'

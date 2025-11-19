@@ -1,23 +1,30 @@
 @use '../core/mini-var.sass' as *
 
-    
+// === БРЕЙКПОИНТЫ ===
+$bp-laptop: 1440.98px
+$bp-mobile: 575.98px
+
 // === СЕТКА (GRID) ===
 
 // Контейнер
-$container-width: 1140px          // Максимальная ширина
-$container-padding: v(16)         // Отступы по бокам (desktop)
-$container-padding-laptop: v(12)  // Отступы на планшете
-$container-padding-mobile: v(10)  // Отступы на мобиле
+$container-width: 1800px // Максимальная ширина
+$container-padding: v(60) // Отступы по бокам (desktop)
+$container-padding-laptop: v(60) // Отступы на планшете
+$container-padding-mobile: v(10) // Отступы на мобиле
 
 // Гаттеры (отступы между колонками в row)
-$gutter: v(16)           // Стандартный (desktop)
-$gutter-laptop: v(12)    // Планшет
-$gutter-mobile: v(10)    // Мобила
-
+$gutter: v(10) // Стандартный (desktop)
+$gutter-laptop: v(10) // Планшет
+$gutter-mobile: v(10) // Мобила
 
 // === ТИПОГРАФИКА ===
-
 
 :root
     --black: #000
     --white: #fff
+    --red: #CF2703
+    --beuge: #F2F2EF
+    --olive: #868367
+    --blue: #5F84BA
+
+    --anim-base: 0.3s

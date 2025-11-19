@@ -1,1 +1,22 @@
 @use '../core' as *
+
+.header
+    position: fixed
+    width: 100%
+    top: 0
+    background-color: var(--red)
+    padding: v(20) 0
+    z-index: 9999
+    &::before
+        content: ''
+        background-color: var(--black)
+        height: v(3)
+        width: 100%
+        position: absolute
+        bottom: 0
+        left: 0
+        right: 0
+        +m
+            height: v(1)
+    +m
+        padding: v(15) 0

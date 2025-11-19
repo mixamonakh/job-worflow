@@ -1,0 +1,18 @@
+@use '../config/variables' as *
+
+// === МЕДИА-ЗАПРОСЫ ===
+
+// Laptop (max-width: 1440.98px)
+@mixin l
+    @media (max-width: $bp-laptop)
+        @content
+
+// Mobile (max-width: 767.98px)
+@mixin m
+    @media (max-width: $bp-mobile)
+        @content
+
+// Desktop XL (min-width: 1920.02px) - если нужен
+@mixin xl
+    @media (min-width: 1920.02px)
+        @content

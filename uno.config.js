@@ -3,48 +3,51 @@ import { defineConfig } from 'unocss'
 import { readFileSync } from 'fs'
 import { glob } from 'glob'
 
+// === БРЕЙКПОИНТЫ (единый источник правды) ===
+const breakpoints = {
+    laptop: 1440.98,
+    mobile: 575.98,
+    desktop: 1920.02,
+    mobileBase: 375,
+    desktopBase: 1920,
+    laptopBase: 1440
+}
+
 // Брейкпоинты для префиксов l: и m:
 const bp = {
-    l: '1440.98px',
-    m: '767.98px',
+    l: `${breakpoints.laptop}px`,
+    m: `${breakpoints.mobile}px`,
 }
 
 // === СКАНИРОВАНИЕ ИСПОЛЬЗУЕМЫХ ЧИСЕЛ ===
-// Ищет все числа в HTML-классах и SASS v() функциях
 function scanUsedNumbers() {
     const usedNumbers = new Set()
     const usedNegatives = new Set()
 
-    // Сканируем HTML файлы (классы типа mt-24, l:p-40, fz-130)
     const htmlFiles = glob.sync('./**/*.html', { ignore: ['./node_modules/**', './dist/**'] })
     htmlFiles.forEach(file => {
         const content = readFileSync(file, 'utf-8')
 
-        // Положительные: mt-24, p-40, l:fz-130, m:w-200
         const positiveMatches = content.matchAll(/(?:[lm]:)?(?:m[tblrxy]?|p[tblrxy]?|fz|w|h|gap|g[xy])-(\d+)/g)
         for (const match of positiveMatches) {
             usedNumbers.add(parseInt(match[1]))
         }
 
-        // Отрицательные: -ml-20, l:-mt-40
         const negativeMatches = content.matchAll(/(?:[lm]:)?-m[tblrxy]?-(\d+)/g)
         for (const match of negativeMatches) {
             usedNegatives.add(parseInt(match[1]))
         }
     })
 
-    // Сканируем SASS/SCSS файлы (v(24), v(-20))
     const sassFiles = glob.sync('./sass/**/*.{sass,scss}', { ignore: ['./node_modules/**', './dist/**'] })
     sassFiles.forEach(file => {
         const content = readFileSync(file, 'utf-8')
 
-        // v(130), v(24)
         const vMatches = content.matchAll(/v\((\d+)\)/g)
         for (const match of vMatches) {
             usedNumbers.add(parseInt(match[1]))
         }
 
-        // v(-20), v(-40)
         const vNegMatches = content.matchAll(/v\(-(\d+)\)/g)
         for (const match of vNegMatches) {
             usedNegatives.add(parseInt(match[1]))
@@ -58,19 +61,16 @@ function scanUsedNumbers() {
 }
 
 // === ГЕНЕРАЦИЯ CSS ПЕРЕМЕННЫХ ===
-// Создаёт var(--N) с 4 брейкпоинтами: база px, min 1920, max 1440, max 767
 function generateFluidVars(numbers, negatives) {
-    // Базовые переменные, которые всегда нужны для grid/утилит
     const baseNumbers = [0, 1, 2, 4, 8, 10, 12, 14, 16, 18, 20, 24, 30, 40, 50, 60, 80, 100]
     const baseNegatives = [1, 2, 4, 8, 10, 12, 16, 20, 24, 40]
 
-    // Объединяем найденные + базовые (Set убирает дубли)
     const allNumbers = Array.from(new Set([...baseNumbers, ...numbers])).sort((a, b) => a - b)
     const allNegatives = Array.from(new Set([...baseNegatives, ...negatives])).sort((a, b) => a - b)
 
     let css = ''
 
-    // 1) БАЗА: px для 1441-1920 (без медиа-запроса)
+    // 1) БАЗА: px для 1441-1920
     css += ':root {\n'
     allNumbers.forEach(n => {
         css += `  --${n}: ${n}px;\n`
@@ -80,38 +80,38 @@ function generateFluidVars(numbers, negatives) {
     })
     css += '}\n\n'
 
-    // 2) MIN-WIDTH 1920.02px: vw от 1920 (фиксация для огромных экранов)
-    css += '@media (min-width: 1920.02px) {\n  :root {\n'
+    // 2) MIN-WIDTH 1920.02px
+    css += `@media (min-width: ${breakpoints.desktop}px) {\n  :root {\n`
     allNumbers.forEach(n => {
-        const vw = ((n / 1920) * 100).toFixed(10)
+        const vw = ((n / breakpoints.desktopBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
     allNegatives.forEach(n => {
-        const vw = ((n / 1920) * 100).toFixed(10)
+        const vw = ((n / breakpoints.desktopBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
     css += '  }\n}\n\n'
 
-    // 3) MAX-WIDTH 1440.98px: vw от 1440 (l: префикс)
-    css += '@media (max-width: 1440.98px) {\n  :root {\n'
+    // 3) MAX-WIDTH 1440.98px (l:)
+    css += `@media (max-width: ${breakpoints.laptop}px) {\n  :root {\n`
     allNumbers.forEach(n => {
-        const vw = ((n / 1440) * 100).toFixed(10)
+        const vw = ((n / breakpoints.laptopBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
     allNegatives.forEach(n => {
-        const vw = ((n / 1440) * 100).toFixed(10)
+        const vw = ((n / breakpoints.laptopBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
     css += '  }\n}\n\n'
 
-    // 4) MAX-WIDTH 767.98px: vw от 375 (m: префикс)
-    css += '@media (max-width: 767.98px) {\n  :root {\n'
+    // 4) MAX-WIDTH 767.98px (m:)
+    css += `@media (max-width: ${breakpoints.mobile}px) {\n  :root {\n`
     allNumbers.forEach(n => {
-        const vw = ((n / 375) * 100).toFixed(10)
+        const vw = ((n / breakpoints.mobileBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
     allNegatives.forEach(n => {
-        const vw = ((n / 375) * 100).toFixed(10)
+        const vw = ((n / breakpoints.mobileBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
     css += '  }\n}'
@@ -119,16 +119,13 @@ function generateFluidVars(numbers, negatives) {
     return css
 }
 
-
 // === КОНФИГ UNOCSS ===
 export default defineConfig({
-    // БЕЗ presetUno() - чистый лист, только твои правила
     presets: [],
     configDeps: [
-    'sass/**/*.sass',
-    'sass/**/*.scss',
-  ],
-    // Генерация переменных при сборке
+        'sass/**/*.sass',
+        'sass/**/*.scss',
+    ],
     preflights: [
         {
             layer: 'preflights',
@@ -141,9 +138,7 @@ export default defineConfig({
     ],
 
     preflight: false,
-    // Префиксы l: и m: для responsive классов
     variants: [
-        // l:класс → @media (max-width: 1440.98px)
         (matcher) => {
             const m = matcher.match(/^l:(.+)/)
             if (!m) return matcher
@@ -152,7 +147,6 @@ export default defineConfig({
                 parent: `@media (max-width: ${bp.l})`,
             }
         },
-        // m:класс → @media (max-width: 767.98px)
         (matcher) => {
             const m = matcher.match(/^m:(.+)/)
             if (!m) return matcher
@@ -201,6 +195,10 @@ export default defineConfig({
         // Width / Height: w-100, h-200
         [/^w-(\d+)$/, ([, n]) => ({ width: `var(--${n})` })],
         [/^h-(\d+)$/, ([, n]) => ({ height: `var(--${n})` })],
+
+        // Width / Height в процентах: w-50p, h-75p
+        [/^w-(\d+)p$/, ([, n]) => ({ width: `${n}%` })],
+        [/^h-(\d+)p$/, ([, n]) => ({ height: `${n}%` })],
 
         // Gap: gap-24, gx-20, gy-30
         [/^gap-(\d+)$/, ([, n]) => ({ gap: `var(--${n})` })],
@@ -333,8 +331,14 @@ export default defineConfig({
         // Margin специальные
         ['mb-0', { 'margin-bottom': '0' }],
         ['mt-0', { 'margin-top': '0' }],
+        ['mt-auto', { 'margin-top': 'auto' }],
+        ['mt-auto', { 'margin-top': 'auto' }],
         ['mx-auto', { 'margin-left': 'auto', 'margin-right': 'auto' }],
         ['my-auto', { 'margin-top': 'auto', 'margin-bottom': 'auto' }],
+        ['ml-auto', { 'margin-left': 'auto' }],
+        ['mr-auto', { 'margin-right': 'auto' }],
+
+
 
         // === POSITION ===
 
@@ -344,16 +348,35 @@ export default defineConfig({
         ['position-fixed', { position: 'fixed' }],
         ['position-sticky', { position: 'sticky' }],
 
-        // Top/Right/Bottom/Left с var
+        // Top/Right/Bottom/Left с var (положительные, адаптивные): top-20, left-40
         [/^top-(\d+)$/, ([, n]) => ({ top: `var(--${n})` })],
         [/^right-(\d+)$/, ([, n]) => ({ right: `var(--${n})` })],
         [/^bottom-(\d+)$/, ([, n]) => ({ bottom: `var(--${n})` })],
         [/^left-(\d+)$/, ([, n]) => ({ left: `var(--${n})` })],
+
+        // Top/Right/Bottom/Left отрицательные: -top-20, -left-40
+        [/^-top-(\d+)$/, ([, n]) => ({ top: `var(---${n})` })],
+        [/^-right-(\d+)$/, ([, n]) => ({ right: `var(---${n})` })],
+        [/^-bottom-(\d+)$/, ([, n]) => ({ bottom: `var(---${n})` })],
+        [/^-left-(\d+)$/, ([, n]) => ({ left: `var(---${n})` })],
+
+        // Top/Right/Bottom/Left в процентах: top-50p, left-100p
+        [/^top-(\d+)p$/, ([, n]) => ({ top: `${n}%` })],
+        [/^right-(\d+)p$/, ([, n]) => ({ right: `${n}%` })],
+        [/^bottom-(\d+)p$/, ([, n]) => ({ bottom: `${n}%` })],
+        [/^left-(\d+)p$/, ([, n]) => ({ left: `${n}%` })],
+
+        // Фиксированные значения (0 и auto)
         ['top-0', { top: '0' }],
         ['right-0', { right: '0' }],
         ['bottom-0', { bottom: '0' }],
         ['left-0', { left: '0' }],
+        ['top-auto', { top: 'auto' }],
+        ['right-auto', { right: 'auto' }],
+        ['bottom-auto', { bottom: 'auto' }],
+        ['left-auto', { left: 'auto' }],
         ['inset-0', { top: '0', right: '0', bottom: '0', left: '0' }],
+
 
         // === OVERFLOW ===
 
@@ -373,7 +396,13 @@ export default defineConfig({
 
         // === Z-INDEX ===
 
+        // Кастомный z-index: z-999, z-1000
         [/^z-(\d+)$/, ([, n]) => ({ 'z-index': n })],
+
+        // Отрицательный z-index: z--1, z--10
+        [/^z--(\d+)$/, ([, n]) => ({ 'z-index': `-${n}` })],
+
+        // Фиксированные значения (для удобства)
         ['z-0', { 'z-index': '0' }],
         ['z-10', { 'z-index': '10' }],
         ['z-20', { 'z-index': '20' }],
@@ -381,6 +410,7 @@ export default defineConfig({
         ['z-40', { 'z-index': '40' }],
         ['z-50', { 'z-index': '50' }],
         ['z-auto', { 'z-index': 'auto' }],
+
 
         // === BORDER RADIUS ===
 
@@ -394,12 +424,19 @@ export default defineConfig({
 
         // === OPACITY ===
 
-        [/^opacity-(\d+)$/, ([, n]) => ({ opacity: `0.${n}` })],
+        // Кастомная opacity: opacity-15, opacity-85
+        [/^opacity-(\d+)$/, ([, n]) => {
+            const value = Number(n) / 100
+            return { opacity: value.toString() }
+        }],
+
+        // Фиксированные значения
         ['opacity-0', { opacity: '0' }],
         ['opacity-25', { opacity: '0.25' }],
         ['opacity-50', { opacity: '0.5' }],
         ['opacity-75', { opacity: '0.75' }],
         ['opacity-100', { opacity: '1' }],
+
 
         // === OBJECT FIT (для изображений) ===
 
@@ -446,8 +483,5 @@ export default defineConfig({
         ['min-h-screen', { 'min-height': '100vh' }],
     ],
 
-    // Shortcuts для частых комбинаций
-    shortcuts: {
-
-    },
+    shortcuts: {},
 })
