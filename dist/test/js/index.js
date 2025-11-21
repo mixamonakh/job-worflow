@@ -27,7 +27,7 @@
     fetch(link.href, fetchOpts);
   }
 })();
-const iconSvg = "/vystavka-karikaturistov/i/bulit-map.svg";
+const iconSvg = "/spec-workflow/i/bulit-map.svg";
 gsap.registerPlugin(ScrollTrigger, Draggable);
 if (navigator.userAgent.indexOf("Mac") > 0) {
   $("html").addClass("mac");

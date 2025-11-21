@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build:dev": "vite build --mode development",
-    "build:test": "vite build --mode test",
-    "build:production": "vite build --mode production",
-    "preview": "vite preview"
+    "build:test": "vite build --mode test && node scripts/clean-and-optimize.js dist/test",
+    "build:production": "vite build --mode production && node scripts/clean-and-optimize.js dist/production",
+    "preview": "vite preview",
+    "sort": "node scripts/sort-classes.js",
+    "unsort": "node scripts/unsort-classes.js"
   },
   "keywords": [],
   "author": "",
@@ -16,14 +18,14 @@
   "description": "",
   "devDependencies": {
     "sass": "^1.93.2",
-    "sharp": "^0.34.5",
+    "svgo": "^4.0.0",
     "terser": "^5.44.0",
     "unocss": "^66.5.4",
-    "vite": "^7.1.9",
-    "vite-plugin-image-optimizer": "^2.0.2"
+    "vite": "^7.1.9"
   },
   "dependencies": {
-    "glob": "^11.0.3",
-    "gsap": "^3.13.0"
+    "glob": "^11.1.0",
+    "gsap": "^3.13.0",
+    "sharp": "^0.34.5"
   }
 }

@@ -10,7 +10,7 @@ const breakpoints = {
     desktop: 1920.02,
     mobileBase: 375,
     desktopBase: 1920,
-    laptopBase: 1440
+    laptopBase: 1440,
 }
 
 // Брейкпоинты для префиксов l: и m:
@@ -24,11 +24,16 @@ function scanUsedNumbers() {
     const usedNumbers = new Set()
     const usedNegatives = new Set()
 
-    const htmlFiles = glob.sync('./**/*.html', { ignore: ['./node_modules/**', './dist/**'] })
-    htmlFiles.forEach(file => {
+    // HTML
+    const htmlFiles = glob.sync('./**/*.html', {
+        ignore: ['./node_modules/**', './dist/**'],
+    })
+    htmlFiles.forEach((file) => {
         const content = readFileSync(file, 'utf-8')
 
-        const positiveMatches = content.matchAll(/(?:[lm]:)?(?:m[tblrxy]?|p[tblrxy]?|fz|w|h|gap|g[xy])-(\d+)/g)
+        const positiveMatches = content.matchAll(
+            /(?:[lm]:)?(?:m[tblrxy]?|p[tblrxy]?|fz|w|h|gap|g[xy])-(\d+)/g,
+        )
         for (const match of positiveMatches) {
             usedNumbers.add(parseInt(match[1]))
         }
@@ -39,8 +44,11 @@ function scanUsedNumbers() {
         }
     })
 
-    const sassFiles = glob.sync('./sass/**/*.{sass,scss}', { ignore: ['./node_modules/**', './dist/**'] })
-    sassFiles.forEach(file => {
+    // SASS
+    const sassFiles = glob.sync('./sass/**/*.{sass,scss}', {
+        ignore: ['./node_modules/**', './dist/**'],
+    })
+    sassFiles.forEach((file) => {
         const content = readFileSync(file, 'utf-8')
 
         const vMatches = content.matchAll(/v\((\d+)\)/g)
@@ -54,9 +62,41 @@ function scanUsedNumbers() {
         }
     })
 
+    // CSS (обычный)
+    const cssFiles = glob.sync('./**/*.css', {
+        ignore: ['./node_modules/**', './dist/**'],
+    })
+    cssFiles.forEach((file) => {
+        const content = readFileSync(file, 'utf-8')
+
+        // классы типа m-24, fz-18, gap-16 и т.п.
+        const positiveMatches = content.matchAll(
+            /(?:[lm]:)?(?:m[tblrxy]?|p[tblrxy]?|fz|w|h|gap|g[xy])-(\d+)/g,
+        )
+        for (const match of positiveMatches) {
+            usedNumbers.add(parseInt(match[1]))
+        }
+
+        const negativeMatches = content.matchAll(/(?:[lm]:)?-m[tblrxy]?-(\d+)/g)
+        for (const match of negativeMatches) {
+            usedNegatives.add(parseInt(match[1]))
+        }
+
+        // прямые var(--24) / var(---24)
+        const varPos = content.matchAll(/var\(--(\d+)\)/g)
+        for (const match of varPos) {
+            usedNumbers.add(parseInt(match[1]))
+        }
+
+        const varNeg = content.matchAll(/var\(---(\d+)\)/g)
+        for (const match of varNeg) {
+            usedNegatives.add(parseInt(match[1]))
+        }
+    })
+
     return {
         positive: Array.from(usedNumbers).sort((a, b) => a - b),
-        negative: Array.from(usedNegatives).sort((a, b) => a - b)
+        negative: Array.from(usedNegatives).sort((a, b) => a - b),
     }
 }
 
@@ -65,28 +105,32 @@ function generateFluidVars(numbers, negatives) {
     const baseNumbers = [0, 1, 2, 4, 8, 10, 12, 14, 16, 18, 20, 24, 30, 40, 50, 60, 80, 100]
     const baseNegatives = [1, 2, 4, 8, 10, 12, 16, 20, 24, 40]
 
-    const allNumbers = Array.from(new Set([...baseNumbers, ...numbers])).sort((a, b) => a - b)
-    const allNegatives = Array.from(new Set([...baseNegatives, ...negatives])).sort((a, b) => a - b)
+    const allNumbers = Array.from(new Set([...baseNumbers, ...numbers])).sort(
+        (a, b) => a - b,
+    )
+    const allNegatives = Array.from(new Set([...baseNegatives, ...negatives])).sort(
+        (a, b) => a - b,
+    )
 
     let css = ''
 
     // 1) БАЗА: px для 1441-1920
     css += ':root {\n'
-    allNumbers.forEach(n => {
+    allNumbers.forEach((n) => {
         css += `  --${n}: ${n}px;\n`
     })
-    allNegatives.forEach(n => {
+    allNegatives.forEach((n) => {
         css += `  ---${n}: -${n}px;\n`
     })
     css += '}\n\n'
 
     // 2) MIN-WIDTH 1920.02px
     css += `@media (min-width: ${breakpoints.desktop}px) {\n  :root {\n`
-    allNumbers.forEach(n => {
+    allNumbers.forEach((n) => {
         const vw = ((n / breakpoints.desktopBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
-    allNegatives.forEach(n => {
+    allNegatives.forEach((n) => {
         const vw = ((n / breakpoints.desktopBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
@@ -94,23 +138,23 @@ function generateFluidVars(numbers, negatives) {
 
     // 3) MAX-WIDTH 1440.98px (l:)
     css += `@media (max-width: ${breakpoints.laptop}px) {\n  :root {\n`
-    allNumbers.forEach(n => {
+    allNumbers.forEach((n) => {
         const vw = ((n / breakpoints.laptopBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
-    allNegatives.forEach(n => {
+    allNegatives.forEach((n) => {
         const vw = ((n / breakpoints.laptopBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
     css += '  }\n}\n\n'
 
-    // 4) MAX-WIDTH 767.98px (m:)
+    // 4) MAX-WIDTH 575.98px (m:)
     css += `@media (max-width: ${breakpoints.mobile}px) {\n  :root {\n`
-    allNumbers.forEach(n => {
+    allNumbers.forEach((n) => {
         const vw = ((n / breakpoints.mobileBase) * 100).toFixed(10)
         css += `    --${n}: ${vw}vw;\n`
     })
-    allNegatives.forEach(n => {
+    allNegatives.forEach((n) => {
         const vw = ((n / breakpoints.mobileBase) * 100).toFixed(10)
         css += `    ---${n}: -${vw}vw;\n`
     })
@@ -121,20 +165,50 @@ function generateFluidVars(numbers, negatives) {
 
 // === КОНФИГ UNOCSS ===
 export default defineConfig({
+    // файлы, за которыми UnoCSS следит (и в dev, и в build)
+    content: {
+        filesystem: [
+            './**/*.html',
+            './sass/**/*.{sass,scss}',
+            './**/*.css',
+        ],
+    },
+
+    // что точно не нужно сканировать
+    exclude: [/node_modules/, /dist/],
+
     presets: [],
     configDeps: [
         'sass/**/*.sass',
         'sass/**/*.scss',
     ],
+    safelist: process.env.NODE_ENV === 'development'
+        ? [
+            // Базовые col-*
+            ...Array.from({ length: 12 }, (_, i) => `col-${i + 1}`),
+            'col-auto',
+
+            // Лаптоп (l:)
+            ...Array.from({ length: 12 }, (_, i) => `l:col-${i + 1}`),
+            'l:col-auto',
+
+            // Мобилка (m:)
+            ...Array.from({ length: 12 }, (_, i) => `m:col-${i + 1}`),
+            'm:col-auto',
+        ]
+        : [],
+
     preflights: [
         {
             layer: 'preflights',
             getCSS: () => {
                 const used = scanUsedNumbers()
-                console.log(`[UnoCSS] Генерируем: ${used.positive.length} положительных, ${used.negative.length} отрицательных`)
+                console.log(
+                    `[UnoCSS] Генерируем: ${used.positive.length} положительных, ${used.negative.length} отрицательных`,
+                )
                 return generateFluidVars(used.positive, used.negative)
-            }
-        }
+            },
+        },
     ],
 
     preflight: false,
@@ -216,6 +290,8 @@ export default defineConfig({
             }
         }],
 
+        // По ширине контента
+        ['col-auto', { flex: '0 0 auto', width: 'auto', },],
 
         // Offset: offset-1 до offset-11
         [/^offset-(\d{1,2})$/, ([, d]) => {
@@ -481,6 +557,16 @@ export default defineConfig({
         ['min-h-0', { 'min-height': '0' }],
         ['min-h-full', { 'min-height': '100%' }],
         ['min-h-screen', { 'min-height': '100vh' }],
+
+        // === COLOR ===
+        // Цвет текста: c-red, c-olive, c-любой
+        [/^c-([a-z]+)$/, ([, color]) => ({ color: `var(--${color})` })],
+
+        // Фон: bgc-red, bgc-blue, bgc-любой
+        [/^bgc-([a-z]+)$/, ([, color]) => ({ 'background-color': `var(--${color})` })],
+
+        // Border: bc-red, bc-olive
+        [/^brdc-([a-z]+)$/, ([, color]) => ({ 'border-color': `var(--${color})` })],
     ],
 
     shortcuts: {},

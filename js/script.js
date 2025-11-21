@@ -2,6 +2,7 @@
 import { Timeline } from 'gsap/gsap-core';
 import 'virtual:uno.css'
 
+
 gsap.registerPlugin(ScrollTrigger, Draggable);
 
 if (navigator.userAgent.indexOf('Mac') > 0) {
