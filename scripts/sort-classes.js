@@ -4,7 +4,7 @@ import { globSync } from 'glob'
 // ========== КОНФИГ ==========
 const CONFIG = {
   // Теги, которые НЕ обрабатываем
-  excludedTags: ['svg', 'path', 'circle', 'rect', 'line'],
+  excludedTags: [],
 
   // Минимальная длина класса для раскладки (если меньше — только сортируем в одну строку)
   minLengthToExpand: 50,
